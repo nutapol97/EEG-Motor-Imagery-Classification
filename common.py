@@ -143,10 +143,10 @@ def train(model,
         wand.log({**metrics, **test_metrics})
 
         if epoch+1 > 2 and valid_loss[-1] < valid_loss[-2] and valid_accuracy[-2] <= valid_accuracy[-1] :
-                newpath = r'./weight{}'.format(weights_name) 
+                newpath = r'./{}'.format(weights_name) 
                 if not os.path.exists(newpath):
                     os.makedirs(newpath)
-                torch.save(model.state_dict(), './weight{}/{}_{:.4f}_{:.4f}'.format(weights_name,weights_name,valid_loss[-1],valid_accuracy[-1]))
+                torch.save(model.state_dict(),               './{}/{}_{}_{:.4f}_{:.4f}'.format(weights_name,valid_loss[-1],weights_name,valid_loss[-1],valid_accuracy[-1]))
         if (epoch % 100) ==0:
             print ('Epoch %d/%d, Tr Loss: %.4f, Tr Acc: %.4f, Val Loss: %.4f, Val Acc: %.4f'
                        %(epoch+1, num_epochs, train_loss[-1], train_accuracy[-1], valid_loss[-1], valid_accuracy[-1]))
