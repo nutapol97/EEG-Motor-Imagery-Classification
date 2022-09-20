@@ -33,6 +33,9 @@ import numpy as np
 
 from ignite.engine import Events, create_supervised_trainer, create_supervised_evaluator
 from ignite.metrics import Accuracy, Loss, RunningAverage
+from sklearn.model_selection import train_test_split
+from torch.utils.data import TensorDataset
+from torch.utils.data import DataLoader
 
 
 def train(model,
@@ -57,7 +60,7 @@ def train(model,
     valid_loss = [10,11]
     train_accuracy = []
     valid_accuracy = []
-    old_valid_loss = 100
+    
 
     valid_loss_vail = []
     
@@ -139,9 +142,11 @@ def train(model,
                        "Test/Test_accuracy": correct_scalar / len(test_loader.dataset) * 100.0}
         wand.log({**metrics, **test_metrics})
 
-        if valid_loss[-1] < old_valid_loss and valid_loss[-2] < old_valid_loss :
-                torch.save(model.state_dict(), './weight/{}_{:.4f}_{:.4f}'.format(weights_name,valid_loss[-1],valid_accuracy[-1]))
-                old_valid_loss = valid_loss[-1]
+        if epoch+1 > 2 and valid_loss[-1] < valid_loss[-2] and valid_accuracy[-2] <= valid_accuracy[-1] :
+                newpath = r'./weight{}'.format(weights_name) 
+                if not os.path.exists(newpath):
+                    os.makedirs(newpath)
+                torch.save(model.state_dict(), './weight{}/{}_{:.4f}_{:.4f}'.format(weights_name,weights_name,valid_loss[-1],valid_accuracy[-1]))
         if (epoch % 100) ==0:
             print ('Epoch %d/%d, Tr Loss: %.4f, Tr Acc: %.4f, Val Loss: %.4f, Val Acc: %.4f'
                        %(epoch+1, num_epochs, train_loss[-1], train_accuracy[-1], valid_loss[-1], valid_accuracy[-1]))
@@ -316,15 +321,15 @@ class EEG:
         self.y = self.epochs.events[:, -1]
         return self.X, self.y
     
-    def get_X_y_cross(self):
+    def get_X_y_ourdata(self,tmin=0,tmax=4):
         events = mne.find_events(raw)
         
         epochs = mne.Epochs(
         raw,
         events,
         event_id=[1,2,3],
-        tmin=0,
-        tmax=4,
+        tmin=tmin,
+        tmax=tmax,
         picks="data",
         on_missing='warn',
         baseline=None,
@@ -388,3 +393,169 @@ def do_plot(train_loss, valid_loss,ty):
         
         
         
+class EEG_fif:
+    def __init__(self, path, base_url, subjects, runs):
+        self.subpath = ''
+        self.path = path
+        print(path)
+        self.base_url = base_url
+        self.subjects = subjects
+        self.runs = runs
+        
+        # download data if does not exist in path.
+        # self.load_data()
+        self.data_to_raw()
+    
+    def load_data(self):
+        print(f">>> Start download from: {self.base_url}.")
+        print(f"Downloading files to: {self.path}.")
+        for subject in self.subjects:
+            eegbci.load_data(subject,self.runs,path=self.path,base_url=self.base_url)
+        print("Done.")
+    
+    
+        
+        print("Done.")
+        return self.raw
+    def filter(self, freq):
+        raw = self.raw
+        low, high = freq
+        print(f">>> Apply filter.")
+        self.raw.filter(low, high, fir_design='firwin', verbose=20)
+        return  raw
+    def raw_ica(self):
+        raw = self.raw
+        ica = mne.preprocessing.ICA(n_components=1, max_iter=100)
+        ica.fit(raw)
+        ica.exclude = [1, 2]  # details on how we picked these are omitted here
+        ica.plot_properties(raw, picks=ica.exclude)
+        ica.apply(raw)
+        print('ICA DONE ????')
+        return  raw
+        
+    def get_events(self):
+        event_id = dict(T1=0, T2=1) # the events we want to extract
+        events, event_id = mne.events_from_annotations(self.raw, event_id=event_id)
+        return events, event_id
+    
+    def get_epochs(self, events, event_id):
+        picks = mne.pick_types(self.raw.info, eeg=True, exclude='bads')
+        tmin = 0
+        tmax = 4
+        epochs = mne.Epochs(self.raw, events, event_id, tmin, tmax, proj=True, 
+                            picks=picks, baseline=None, preload=True)
+        return epochs
+    
+    
+        
+    
+    def data_to_raw(self):
+        fullpath = os.path.join(self.path, *self.subpath.split(sep='/'))
+        #print(f">>> Extract all subjects from: {fullpath}.")
+        extension = "fif"
+        raws = []
+        count = 1
+        for i, subject in enumerate(self.subjects):
+            sname = f"S{str(subject).zfill(3)}".upper()
+            
+            for j, run in enumerate(self.runs):
+                rname = f"{sname}R{str(run).zfill(2)}".upper()
+                path_file = os.path.join(fullpath, sname, f'{rname}.{extension}')
+                #print(path_file)
+                #print(f"Loading file #{count}/{len(self.subjects)*len(self.runs)}: {f'{rname}.{extension}'}")
+                raw = mne.io.read_raw_fif( path_file , preload=True, verbose='WARNING' )
+                raws.append(raw)
+                count += 1
+
+        raw = mne.io.concatenate_raws(raws)
+        eegbci.standardize(raw)
+        montage = mne.channels.make_standard_montage('standard_1005')
+        raw.set_montage(montage)
+        self.raw = raw
+    
+    def create_epochs(self):
+        print(">>> Create Epochs.")
+        
+        events, event_id = self.get_events()
+        self.epochs = self.get_epochs(events, event_id)
+        print("Done.")
+        return events , event_id
+# getepoch(raw,4, 10,reject_bad=False,on_missing='warn')    
+    def get_X_y(self,raw,tmin=0,tmax=4):
+        events = mne.find_events(raw)
+        
+        epochs = mne.Epochs(
+        raw,
+        events,
+        event_id=[1,2,3],
+        tmin=tmin,
+        tmax=tmax,
+        picks="data",
+        on_missing='warn',
+        baseline=None,
+            preload=True
+    )
+        epochs=epochs.resample(160)
+            #events , event_id=self.create_epochs()
+        self.X = epochs.get_data()
+        self.y = epochs.events[:, -1]
+        return self.X, self.y 
+
+        
+def getepoch(raws,trial_duration, calibration_duration,reject_bad=False,on_missing='warn'):
+    #reject_criteria = dict(eeg=100e-6)  # 100 µV
+    #flat_criteria = dict(eeg=1e-6)  # 1 µV
+    epochs_list = []
+    raws = [raws]
+    print(len(raws))
+    for raw in raws:
+        print(raw)
+        events = mne.find_events(raw)
+        epochs = mne.Epochs(
+            raw,
+            events,
+            event_id=[1,2,3],
+            tmin=-calibration_duration,
+            tmax=trial_duration,
+            picks="data",
+            on_missing=on_missing,
+            baseline=None
+        )
+        
+        epochs_list.append(epochs)
+    epochs = mne.concatenate_epochs(epochs_list)
+    labels = epochs.events[:,-1]
+    
+    print(f'Found {len(labels)} epochs')
+    print(epochs)
+    print(labels)
+
+    return epochs.get_data(),epochs,labels
+
+        
+        
+def do_plot(train_loss, valid_loss,ty):
+    if ty == "loss":
+        plt.figure(figsize=(10,10))
+        
+        plt.plot(train_loss, label='train_loss')
+        plt.plot(valid_loss, label='valid_loss')
+        plt.title('loss {}'.format(iter))
+        plt.legend()
+        plt.show()
+    if ty == "acc":
+        plt.figure(figsize=(10,10))
+        
+        plot_ty=torch.tensor(train_loss, device = 'cpu')
+        plat_va=torch.tensor(valid_loss, device = 'cpu')
+        plt.plot(plot_ty, label='train_acc')
+        plt.plot(plat_va, label='valid_acc')
+        plt.title('acc {}'.format(iter))
+        plt.legend()
+        plt.show()
+def create_dataloader(X, y, batch_size):
+    X_tensor = torch.tensor(X).float()
+    y_tensor = torch.tensor(y).long()
+    dataset_tensor = TensorDataset(X_tensor, y_tensor)
+    dl = torch.utils.data.DataLoader(dataset_tensor, batch_size=batch_size, shuffle=True)
+    return dl
