@@ -503,6 +503,21 @@ class EEG_fif:
         self.X = epochs.get_data()
         self.y = epochs.events[:, -1]
         return self.X, self.y 
+    def epochs_visu(self,raw,tmin=0,tmax=4):
+        events = mne.find_events(raw)
+        
+        epochs = mne.Epochs(
+        raw,
+        events,
+        event_id=[1,2,3],
+        tmin=tmin,
+        tmax=tmax,
+        picks="data",
+        on_missing='warn',
+        baseline=None,
+            preload=True
+    )
+        return epochs
 
         
 def getepoch(raws,trial_duration, calibration_duration,reject_bad=False,on_missing='warn'):
