@@ -61,7 +61,8 @@ def train(model,
     train_accuracy = []
     valid_accuracy = []
     
-
+    old_loss = 100
+    old_acc = 0
     valid_loss_vail = []
     
     
@@ -142,11 +143,13 @@ def train(model,
                        "Test/Test_accuracy": correct_scalar / len(test_loader.dataset) * 100.0}
         wand.log({**metrics, **test_metrics})
 
-        if epoch+1 > 2 and valid_loss[-1] < valid_loss[-2] and valid_accuracy[-2] <= valid_accuracy[-1] :
+        if epoch+1 > 2 and valid_loss[-1] < old_loss and old_acc <= valid_accuracy[-1] :
                 newpath = r'./{}'.format(weights_name) 
                 if not os.path.exists(newpath):
                     os.makedirs(newpath)
-                torch.save(model.state_dict(),               './{}/{}_{}_{:.4f}_{:.4f}'.format(weights_name,valid_loss[-1],weights_name,valid_loss[-1],valid_accuracy[-1]))
+                torch.save(model.state_dict(),               './{}/{:.4f}_{}_{:.4f}_{:.4f}'.format(weights_name,valid_loss[-1],weights_name,valid_loss[-1],valid_accuracy[-1]))
+                old_loss = valid_loss[-1]  
+                old_acc = valid_accuracy[-1]
         if (epoch % 100) ==0:
             print ('Epoch %d/%d, Tr Loss: %.4f, Tr Acc: %.4f, Val Loss: %.4f, Val Acc: %.4f'
                        %(epoch+1, num_epochs, train_loss[-1], train_accuracy[-1], valid_loss[-1], valid_accuracy[-1]))
@@ -495,7 +498,7 @@ class EEG_fif:
         baseline=None,
             preload=True
     )
-        epochs=epochs.resample(160)
+        #epochs=epochs.resample(160)
             #events , event_id=self.create_epochs()
         self.X = epochs.get_data()
         self.y = epochs.events[:, -1]
