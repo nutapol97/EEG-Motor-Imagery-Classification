@@ -301,25 +301,26 @@ class EEG:
         events, event_id = mne.events_from_annotations(self.raw, event_id=event_id)
         return events, event_id
     
-    def get_epochs(self, events, event_id):
+    def get_epochs(self, events, event_id,tmin,tmax):
         picks = mne.pick_types(self.raw.info, eeg=True, exclude='bads')
-        tmin = 0
-        tmax = 4
         epochs = mne.Epochs(self.raw, events, event_id, tmin, tmax, proj=True, 
-                            picks=picks, baseline=None, preload=True)
+                            picks=picks, baseline=(-1,0), preload=True)
         return epochs
     
-    def create_epochs(self):
+    def create_epochs(self,tmin = -1,tmax = 4):
         print(">>> Create Epochs.")
         events, event_id = self.get_events()
-        self.epochs = self.get_epochs(events, event_id)
-        return events , event_id
+        self.epochs = self.get_epochs(events, 
+                                      event_id,
+                                      tmin = tmin,
+                                      tmax = tmax)
+        return events , event_id ,self.epochs
         
         print("Done.")
     
     def get_X_y(self):
         if self.epochs is None:
-            events , event_id=self.create_epochs()
+            events , event_id ,epochs=self.create_epochs()
         self.X = self.epochs.get_data()
         self.y = self.epochs.events[:, -1]
         return self.X, self.y
@@ -367,6 +368,7 @@ class EEG:
         montage = mne.channels.make_standard_montage('standard_1005')
         raw.set_montage(montage)
         self.raw = raw
+        return raw
         
         
         
@@ -417,9 +419,8 @@ class EEG_fif:
         print("Done.")
     
     
-        
-        print("Done.")
         return self.raw
+    
     def filter(self, freq):
         raw = self.raw
         low, high = freq
@@ -475,6 +476,7 @@ class EEG_fif:
         montage = mne.channels.make_standard_montage('standard_1005')
         raw.set_montage(montage)
         self.raw = raw
+        return raw
     
     def create_epochs(self):
         print(">>> Create Epochs.")
@@ -484,25 +486,14 @@ class EEG_fif:
         print("Done.")
         return events , event_id
 # getepoch(raw,4, 10,reject_bad=False,on_missing='warn')    
-    def get_X_y(self,raw,tmin=0,tmax=4):
-        events = mne.find_events(raw)
+    def get_X_y(self,epochs,tmin=0,tmax=4):
         
-        epochs = mne.Epochs(
-        raw,
-        events,
-        event_id=[1,2,3],
-        tmin=tmin,
-        tmax=tmax,
-        picks="data",
-        on_missing='warn',
-        baseline=None,
-            preload=True
-    )
         #epochs=epochs.resample(160)
             #events , event_id=self.create_epochs()
         self.X = epochs.get_data()
         self.y = epochs.events[:, -1]
         return self.X, self.y 
+    
     def epochs_visu(self,raw,tmin=0,tmax=4):
         events = mne.find_events(raw)
         
@@ -514,9 +505,9 @@ class EEG_fif:
         tmax=tmax,
         picks="data",
         on_missing='warn',
-        baseline=None,
-            preload=True
-    )
+        baseline=(-1,0),
+        preload=True
+            )
         return epochs
 
         

@@ -1,1 +1,1 @@
-# EEG-Motor-Imagery-Classification
+# eeg_mi
