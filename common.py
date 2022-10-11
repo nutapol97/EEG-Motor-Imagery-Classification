@@ -190,6 +190,161 @@ def train(model,
                 print ('Val Loss: {0}, Val Acc: {1}'.format(valid_loss_vail[-1], valid_accuracy[-1]))
 
     return train_loss,valid_loss,train_accuracy,valid_accuracy
+def train_lstm(model,
+          gpu_num,
+          train_loader,
+          test_loader,
+          
+          optimizer,
+          criterion,
+          wand,
+          vail_loader= None,
+          cross = False,
+          
+         ):
+    
+    config = wand.config
+    weights_name = config.weightname
+    # Train the model
+    num_epochs = config.epochs
+
+    train_loss = []
+    valid_loss = [10,11]
+    train_accuracy = []
+    valid_accuracy = []
+    
+    old_loss = 100
+    old_acc = 0
+    valid_loss_vail = []
+    
+    
+    for epoch in range(config.epochs):
+        iter_loss = 0.0
+        correct = 0
+        iterations = 0
+
+        model.train()
+
+        for i, (items, classes) in enumerate(train_loader):
+            items = Variable(items)
+            classes = classes.type(torch.LongTensor)
+            classes = Variable(classes)
+
+            if cuda.is_available():
+                items = items.cuda(gpu_num)
+                classes = classes.cuda(gpu_num)
+
+            
+            outputs = model.forward(items)
+            #print(type(classes))
+            loss = criterion(outputs.to(torch.float32), classes.to(torch.float32))
+
+            iter_loss += loss.item()
+            
+            #loss = self.weights[0]*self.L1(output[:,0],target[:,0].float())+self.weights[1]*self.CE(output[:,1:3],target[:,1])
+            loss.backward()
+            optimizer.step()
+            
+            metrics = {"train/train_loss": loss}
+            if i + 1 < config.num_step_per_epoch:
+                # 🐝 Log train metrics to wandb 
+                wand.log(metrics)
+            
+            #print(loss)
+            _, predicted = torch.max(outputs.data, 1)
+            correct += (predicted == classes.data).sum()
+            iterations += 1
+
+        train_loss.append(iter_loss/iterations)
+        
+
+        train_accuracy.append((100 * correct.float() / len(train_loader.dataset)))
+        train_metrics = {"train/train_loss": iter_loss/iterations, 
+                       "train/train_accuracy": (100 * correct.float() / len(train_loader.dataset))}
+        
+        wand.log({**metrics, **train_metrics})
+        
+        
+        loss = 0.0
+        correct = 0
+        iterations = 0
+        model.eval()
+
+        for i, (items, classes) in enumerate(test_loader):
+            classes = classes.type(torch.LongTensor)
+            items = Variable(items)
+            classes = Variable(classes)
+            
+            if cuda.is_available():
+                items = items.cuda(gpu_num)
+                classes = classes.cuda(gpu_num)
+
+
+            outputs = model(items)
+            loss += criterion(outputs, classes).item()
+
+            _, predicted = torch.max(outputs.data, 1)
+
+            correct += (predicted == classes.data).sum()
+            #print("correct : {}".format(classes.data))
+            #print("predicted : {}".format(predicted))
+            iterations += 1
+
+        valid_loss.append(loss/iterations)
+        correct_scalar = np.array([correct.clone().cpu()])[0]
+        valid_accuracy.append(correct_scalar / len(test_loader.dataset) * 100.0)
+        
+        test_metrics = {"Test/Test_loss": loss/iterations, 
+                       "Test/Test_accuracy": correct_scalar / len(test_loader.dataset) * 100.0}
+        wand.log({**metrics, **test_metrics})
+
+        if epoch+1 > 2 and valid_loss[-1] < old_loss and old_acc <= valid_accuracy[-1] :
+                newpath = r'./{}'.format(weights_name) 
+                if not os.path.exists(newpath):
+                    os.makedirs(newpath)
+                torch.save(model.state_dict(),               './{}/{:.4f}_{}_{:.4f}_{:.4f}'.format(weights_name,valid_loss[-1],weights_name,valid_loss[-1],valid_accuracy[-1]))
+                old_loss = valid_loss[-1]  
+                old_acc = valid_accuracy[-1]
+        if (epoch % 100) ==0:
+            print ('Epoch %d/%d, Tr Loss: %.4f, Tr Acc: %.4f, Val Loss: %.4f, Val Acc: %.4f'
+                       %(epoch+1, num_epochs, train_loss[-1], train_accuracy[-1], valid_loss[-1], valid_accuracy[-1]))
+            
+        if cross :
+            loss_vail = 0.0
+            correct_vail = 0
+            iterations_vail = 0
+            model.eval()
+
+            for i, (items, classes) in enumerate(vail_loader):
+                classes = classes.type(torch.LongTensor)
+                items = Variable(items)
+                classes = Variable(classes)
+
+                if cuda.is_available():
+                    items = items.cuda(gpu_num)
+                    classes = classes.cuda(gpu_num)
+
+
+                outputs = model(items)
+                loss_vail += criterion(outputs, classes).item()
+
+                _, predicted = torch.max(outputs.data, 1)
+
+                correct_vail += (predicted == classes.data).sum()
+                #print("correct : {}".format(classes.data))
+                #print("predicted : {}".format(predicted))
+                iterations_vail += 1
+
+            valid_loss_vail.append(loss_vail/iterations_vail)
+            correct_scalar = np.array([correct_vail.clone().cpu()])[0]
+            valid_accuracy.append(correct_scalar / len(vail_loader.dataset) * 100.0)
+            vali_metrics = {"val/val_loss": loss_vail/iterations, 
+                       "val/val_accuracy": correct_scalar / len(test_loader.dataset) * 100.0}
+            wand.log({**metrics, **vali_metrics})
+            if (epoch % 100) ==0:
+                print ('Val Loss: {0}, Val Acc: {1}'.format(valid_loss_vail[-1], valid_accuracy[-1]))
+
+    return train_loss,valid_loss,train_accuracy,valid_accuracy
 
 
 def setup_dataflow(X_tensor,y_tensor, train_idx, val_idx):
