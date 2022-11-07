@@ -582,9 +582,9 @@ class EEG_fif:
         print(f">>> Apply filter.")
         self.raw.filter(low, high, fir_design='firwin', verbose=20)
         return  raw
-    def raw_ica(self):
+    def raw_ica(self,n_components=2):
         raw = self.raw
-        ica = mne.preprocessing.ICA(n_components=1, max_iter=100)
+        ica = mne.preprocessing.ICA(n_components, max_iter=100)
         ica.fit(raw)
         ica.exclude = [1, 2]  # details on how we picked these are omitted here
         ica.plot_properties(raw, picks=ica.exclude)
