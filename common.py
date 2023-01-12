@@ -188,7 +188,8 @@ def train(model,
             wand.log({**metrics, **vali_metrics})
             if (epoch % 100) ==0:
                 print ('Val Loss: {0}, Val Acc: {1}'.format(valid_loss_vail[-1], valid_accuracy[-1]))
-
+                
+                print("Resul prediction : {}".format(predicted))
     return train_loss,valid_loss,train_accuracy,valid_accuracy
 def train_lstm(model,
           gpu_num,
@@ -459,10 +460,10 @@ class EEG:
     def get_epochs(self, events, event_id,tmin,tmax):
         picks = mne.pick_types(self.raw.info, eeg=True, exclude='bads')
         epochs = mne.Epochs(self.raw, events, event_id, tmin, tmax, proj=True, 
-                            picks=picks, baseline=(-1,0), preload=True)
+                            picks=picks, baseline=(0,0.5), preload=True)
         return epochs
     
-    def create_epochs(self,tmin = -1,tmax = 4):
+    def create_epochs(self,tmin = 0,tmax = 4):
         print(">>> Create Epochs.")
         events, event_id = self.get_events()
         self.epochs = self.get_epochs(events, 
@@ -520,8 +521,8 @@ class EEG:
 
         raw = mne.io.concatenate_raws(raws)
         eegbci.standardize(raw)
-        montage = mne.channels.make_standard_montage('standard_1005')
-        raw.set_montage(montage)
+        #montage = mne.channels.make_standard_montage('standard_1010')
+        #raw.set_montage(montage)
         self.raw = raw
         return raw
         
@@ -582,9 +583,10 @@ class EEG_fif:
         print(f">>> Apply filter.")
         self.raw.filter(low, high, fir_design='firwin', verbose=20)
         return  raw
-    def raw_ica(self,n_components=2):
+    
+    def raw_ica(self,n_components=2,max_iter=100):
         raw = self.raw
-        ica = mne.preprocessing.ICA(n_components, max_iter=100)
+        ica = mne.preprocessing.ICA(n_components, max_iter=max_iter)
         ica.fit(raw)
         ica.exclude = [1, 2]  # details on how we picked these are omitted here
         ica.plot_properties(raw, picks=ica.exclude)
@@ -628,7 +630,7 @@ class EEG_fif:
 
         raw = mne.io.concatenate_raws(raws)
         eegbci.standardize(raw)
-        montage = mne.channels.make_standard_montage('standard_1005')
+        montage = mne.channels.make_standard_montage('standard_1020')
         raw.set_montage(montage)
         self.raw = raw
         return raw
@@ -649,18 +651,19 @@ class EEG_fif:
         self.y = epochs.events[:, -1]
         return self.X, self.y 
     
-    def epochs_visu(self,raw,tmin=0,tmax=4):
-        events = mne.find_events(raw)
-        
+    def epochs_visu(self,raw,tmin=0,tmax=4,baseline=None):
+        events = mne.find_events(raw, stim_channel='STIM MARKERS')
+        reject_criteria = dict(eeg=150e-6)    
         epochs = mne.Epochs(
         raw,
         events,
-        event_id=[1,2,3],
+        event_id={'Left': 2, 'Right': 1, '3': 3},
         tmin=tmin,
         tmax=tmax,
+        reject=reject_criteria,
         picks="data",
         on_missing='warn',
-        baseline=(-1,0),
+        baseline=baseline,
         preload=True
             )
         return epochs
@@ -723,3 +726,118 @@ def create_dataloader(X, y, batch_size):
     dataset_tensor = TensorDataset(X_tensor, y_tensor)
     dl = torch.utils.data.DataLoader(dataset_tensor, batch_size=batch_size, shuffle=True)
     return dl
+
+
+class EEG_GDF:
+    def __init__(self, path, base_url, subjects):
+        self.subpath = ''
+        self.path = path
+        print(path)
+        self.base_url = base_url
+        self.subjects = subjects
+        
+        
+        # download data if does not exist in path.
+        # self.load_data()
+        self.data_to_raw()
+    
+    def load_data(self):
+        print(f">>> Start download from: {self.base_url}.")
+        print(f"Downloading files to: {self.path}.")
+        for subject in self.subjects:
+            eegbci.load_data(subject,self.runs,path=self.path,base_url=self.base_url)
+        print("Done.")
+    
+    
+        return self.raw
+    
+    def filter(self, freq):
+        raw = self.raw
+        low, high = freq
+        print(f">>> Apply filter.")
+        self.raw.filter(low, high, fir_design='firwin', verbose=20)
+        return  raw
+    
+    def raw_ica(self,n_components=2,max_iter=100):
+        raw = self.raw
+        ica = mne.preprocessing.ICA(n_components, max_iter=max_iter)
+        ica.fit(raw)
+        ica.exclude = [1, 2]  # details on how we picked these are omitted here
+        ica.plot_properties(raw, picks=ica.exclude)
+        ica.apply(raw)
+        print('ICA DONE ????')
+        return  raw
+        
+    def get_events(self):
+        events, _ = mne.events_from_annotations(self.raw)
+        event_id = dict({'769': 7,'770': 8,'771': 9,'772': 10})
+        #event_id = dict(T1=0, T2=1) # the events we want to extract
+        #events, event_id = mne.events_from_annotations(self.raw, event_id=event_id)
+        return events, event_id
+    
+    def get_epochs(self, events, event_id):
+        #picks = mne.pick_types(self.raw.info, eeg=True, exclude='bads')
+        picks = mne.pick_types(self.raw.info, meg=False, eeg=True, eog=False, stim=False, exclude='bads')
+        tmin = 0.
+        tmax = 7.
+        epochs = mne.Epochs(self.raw, events,event_id, tmin, tmax, proj=True, picks=picks,baseline=(0,2), preload=True, on_missing='warn')
+       # epochs = mne.Epochs(self.raw, events, event_id, tmin, tmax, proj=True, 
+        #                    picks=picks, baseline=None, preload=True)
+        return epochs
+    
+    
+        
+    
+    def data_to_raw(self):
+        fullpath = os.path.join(self.path, *self.subpath.split(sep='/'))
+        #print(f">>> Extract all subjects from: {fullpath}.")
+        extension = "gdf"
+        raws = []
+        count = 1
+        for i, subject in enumerate(self.subjects):
+            sname = f"A0{str(subject)}".upper() 
+            path_file = os.path.join(fullpath,f'{sname}T.{extension}')
+
+            raw = mne.io.read_raw_gdf( path_file , preload=True, verbose='WARNING' )
+            raws.append(raw)
+            count += 1
+
+        raw = mne.io.concatenate_raws(raws)
+        eegbci.standardize(raw)
+        #montage = mne.channels.make_standard_montage('standard_1020')
+        #raw.set_montage(montage)
+        self.raw = raw
+        return raw
+    
+    def create_epochs(self):
+        print(">>> Create Epochs.")
+        
+        events, event_id = self.get_events()
+        self.epochs = self.get_epochs(events, event_id)
+        print("Done.")
+        return events , event_id
+# getepoch(raw,4, 10,reject_bad=False,on_missing='warn')    
+    def get_X_y(self,tmin=0,tmax=4):
+        
+        #epochs=epochs.resample(160)
+            #events , event_id=self.create_epochs()
+        self.X = self.epochs.get_data()
+        self.y = self.epochs.events[:, -1]
+        return self.X, self.y 
+    
+    def epochs_visu(self,raw,tmin=0,tmax=4,baseline=None):
+        events = mne.find_events(raw, stim_channel='STIM MARKERS')
+        reject_criteria = dict(eeg=150e-6)    
+        epochs = mne.Epochs(
+        raw,
+        events,
+        event_id={'Left': 2, 'Right': 1, '3': 3},
+        tmin=tmin,
+        tmax=tmax,
+        reject=reject_criteria,
+        picks="data",
+        on_missing='warn',
+        baseline=baseline,
+        preload=True
+            )
+        return epochs
