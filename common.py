@@ -191,6 +191,7 @@ def train(model,
                 
                 print("Resul prediction : {}".format(predicted))
     return train_loss,valid_loss,train_accuracy,valid_accuracy
+
 def train_lstm(model,
           gpu_num,
           train_loader,
