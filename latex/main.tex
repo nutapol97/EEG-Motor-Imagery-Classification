@@ -8,7 +8,7 @@
 % T1 fonts will be used to generate the final print and online PDFs,
 % so please use T1 fonts in your manuscript whenever possible.
 % Other font encondings may result in incorrect characters.
-%
+\usepackage{amsmath}
 \usepackage{graphicx}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
@@ -152,12 +152,12 @@ BCI Competition IV 2a \cite{brunner2008bci} was a collection of EEG data from 9
 \subsection{Data Preprocessing}
 EEG signal was filtered with a band pass filter of 8 - 35 Hz followed by exponential moving standardization $x_{\rm t}$. For exponential moving standardization, compute the exponential moving mean $m_{\rm t}$ at time $t$ and as show in equations (\ref{eq1}).
 Then, compute the exponential moving variance $v_{\rm t}$ at time $t$ as show in equations (\ref{eq2}).
-we set $factornew$ is 0.001 and $esp$ is 0.0001. Finally, standardize the data point $x_{\rm t}$ at time $t$ as show in equations (\ref{eq3}).
+we set $\texttt{factornew}$ is 0.001 and $\texttt{esp}$ is 0.0001. Finally, standardize the data point $x_{\rm t}$ at time $t$ as show in equations (\ref{eq3}).
 
 \begin{eqnarray} 
-m_{\rm t} = factornew \cdot mean(x_{\rm t}) + (1 - factornew) \cdot m_{\rm t-1}, \label{eq1}\\
-v_{\rm t} = factornew\cdot (m_{\rm t} - x_{\rm t})^{2} + (1 - factornew) \cdot v_{\rm t-1} , \label{eq2} \\ 
-x_{\rm t}^{'}  = (x_{\rm t}-m_{\rm t})/max(\sqrt{->v_{\rm t}},esp), \label{eq3} 
+m_{\rm t} = \text{factornew} \cdot \text{mean}(x_{\rm t}) + (1 - \text{factornew}) \cdot m_{\rm t-1}, \label{eq1}\\
+v_{\rm t} = \text{factornew}\cdot (m_{\rm t} - x_{\rm t})^{2} + (1 - \text{factornew}) \cdot v_{\rm t-1} , \label{eq2} \\ 
+x_{\rm t}^{'}  = \frac{(x_{\rm t}-m_{\rm t})}{\text{max}(\sqrt{->v_{\rm t}},\text{esp}), \label{eq3} }
 \end{eqnarray}
 
 
