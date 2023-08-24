@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  dev:
+    image: akraradets/dataug-eegmi-python:latest
+    build: 
+      context: .
+      dockerfile: python.Dockerfile
+    volumes:
+      - ./projects:/root/projects
+      - ./.vscode-server/python:/root/.vscode-server
+  latex:
+    image: akraradets/dataug-eegmi-latex:latest
+    build: 
+      context: .
+      dockerfile: latex.Dockerfile
+    volumes:
+      - ./latex:/root/latex
+      - ./.vscode-server/latex:/root/.vscode-server
