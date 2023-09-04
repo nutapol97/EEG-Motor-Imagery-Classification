@@ -1,0 +1,108 @@
+\begin{thebibliography}{10}
+
+\bibitem{wolpaw2013brain}
+Wolpaw JR.
+\newblock Brain--Computer Interfaces.
+\newblock In: Handbook of Clinical Neurology. vol. 110. Elsevier; 2013. p. 67-74.
+
+\bibitem{lawhern2018eegnet}
+Lawhern VJ, Solon AJ, Waytowich NR, Gordon SM, Hung CP, Lance BJ.
+\newblock EEGNet: A Compact Convolutional Neural Network for EEG-Based Brain--Computer Interfaces.
+\newblock Journal of Neural Engineering. 2018;15(5):056013.
+
+\bibitem{bilbao2017overfitting}
+Bilbao I, Bilbao J.
+\newblock Overfitting problem and the over-training in the era of data: Particularly for Artificial Neural Networks.
+\newblock In: 2017 eighth international conference on intelligent computing and information systems (ICICIS). IEEE; 2017. p. 173-7.
+
+\bibitem{wang2018data}
+Wang F, Zhong Sh, Peng J, Jiang J, Liu Y.
+\newblock Data augmentation for EEG-based emotion recognition with deep convolutional neural networks.
+\newblock In: MultiMedia Modeling: 24th International Conference, MMM 2018, Bangkok, Thailand, February 5-7, 2018, Proceedings, Part II 24. Springer; 2018. p. 82-93.
+
+\bibitem{parvan2019transfer}
+Parvan M, Ghiasi AR, Rezaii TY, Farzamnia A.
+\newblock Transfer learning based motor imagery classification using convolutional neural networks.
+\newblock In: 2019 27th Iranian Conference on Electrical Engineering (ICEE). IEEE; 2019. p. 1825-8.
+
+\bibitem{li2019channel}
+Li Y, Zhang XR, Zhang B, Lei MY, Cui WG, Guo YZ.
+\newblock A channel-projection mixed-scale convolutional neural network for motor imagery EEG decoding.
+\newblock IEEE Transactions on Neural Systems and Rehabilitation Engineering. 2019;27(6):1170-80.
+
+\bibitem{schwabedal2018addressing}
+Schwabedal JT, Snyder JC, Cakmak A, Nemati S, Clifford GD.
+\newblock Addressing class imbalance in classification problems of noisy signals by using fourier transform surrogates.
+\newblock arXiv preprint arXiv:180608675. 2018.
+
+\bibitem{rommel2021cadda}
+Rommel C, Moreau T, Paillard J, Gramfort A.
+\newblock CADDA: Class-wise automatic differentiable data augmentation for EEG signals.
+\newblock arXiv preprint arXiv:210613695. 2021.
+
+\bibitem{rommel2022data}
+Rommel C, Paillard J, Moreau T, Gramfort A.
+\newblock Data augmentation for learning predictive models on EEG: a systematic comparison.
+\newblock Journal of Neural Engineering. 2022;19(6):066020.
+
+\bibitem{mohsenvand2020contrastive}
+Mohsenvand MN, Izadi MR, Maes P.
+\newblock Contrastive representation learning for electroencephalogram classification.
+\newblock In: Machine Learning for Health. PMLR; 2020. p. 238-53.
+
+\bibitem{ho2020denoising}
+Ho J, Jain A, Abbeel P.
+\newblock Denoising diffusion probabilistic models.
+\newblock Advances in neural information processing systems. 2020;33:6840-51.
+
+\bibitem{akrout2023diffusion}
+Akrout M, Gyepesi B, Holl{\'o} P, Po{\'o}r A, Kincs{\H{o}} B, Solis S, et~al.
+\newblock Diffusion-based Data Augmentation for Skin Disease Classification: Impact Across Original Medical Datasets to Fully Synthetic Images.
+\newblock arXiv preprint arXiv:230104802. 2023.
+
+\bibitem{chen2020wavegrad}
+Chen N, Zhang Y, Zen H, Weiss RJ, Norouzi M, Chan W.
+\newblock Wavegrad: Estimating gradients for waveform generation.
+\newblock arXiv preprint arXiv:200900713. 2020.
+
+\bibitem{song2020sliced}
+Song Y, Garg S, Shi J, Ermon S.
+\newblock Sliced score matching: A scalable approach to density and score estimation.
+\newblock In: Uncertainty in Artificial Intelligence. PMLR; 2020. p. 574-84.
+
+\bibitem{brunner2008bci}
+Brunner C, Leeb R, M{\"u}ller-Putz G, Schl{\"o}gl A, Pfurtscheller G.
+\newblock BCI Competition 2008--Graz data set A.
+\newblock Institute for Knowledge Discovery (Laboratory of Brain-Computer Interfaces), Graz University of Technology. 2008;16:1-6.
+
+\bibitem{altaheri2022physics}
+Altaheri H, Muhammad G, Alsulaiman M.
+\newblock Physics-informed attention temporal convolutional network for EEG-based motor imagery classification.
+\newblock IEEE Transactions on Industrial Informatics. 2022;19(2):2249-58.
+
+\bibitem{salami2022eeg}
+Salami A, Andreu-Perez J, Gillmeister H.
+\newblock EEG-ITNet: An explainable inception temporal convolutional network for motor imagery classification.
+\newblock IEEE Access. 2022;10:36672-85.
+
+\bibitem{schirrmeister2017deep}
+Schirrmeister RT, Springenberg JT, Fiederer LDJ, Glasstetter M, Eggensperger K, Tangermann M, et~al.
+\newblock Deep learning with convolutional neural networks for EEG decoding and visualization.
+\newblock Human brain mapping. 2017;38(11):5391-420.
+
+\bibitem{lashgari2020data}
+Lashgari E, Liang D, Maoz U.
+\newblock Data augmentation for deep-learning-based electroencephalography.
+\newblock Journal of Neuroscience Methods. 2020;346:108885.
+
+\bibitem{leeb2008bci}
+Leeb R, Brunner C, M{\"u}ller-Putz G, Schl{\"o}gl A, Pfurtscheller G.
+\newblock BCI Competition 2008--Graz data set B.
+\newblock Graz University of Technology, Austria. 2008:1-6.
+
+\bibitem{terzano2001atlas}
+Terzano MG, Parrino L, Sherieri A, Chervin R, Chokroverty S, Guilleminault C, et~al.
+\newblock Atlas, rules, and recording techniques for the scoring of cyclic alternating pattern (CAP) in human sleep.
+\newblock Sleep medicine. 2001;2(6):537-54.
+
+\end{thebibliography}
