@@ -95,14 +95,14 @@ Lashgari E, Liang D, Maoz U.
 \newblock Data augmentation for deep-learning-based electroencephalography.
 \newblock Journal of Neuroscience Methods. 2020;346:108885.
 
-\bibitem{leeb2008bci}
-Leeb R, Brunner C, M{\"u}ller-Putz G, Schl{\"o}gl A, Pfurtscheller G.
-\newblock BCI Competition 2008--Graz data set B.
-\newblock Graz University of Technology, Austria. 2008:1-6.
-
 \bibitem{terzano2001atlas}
 Terzano MG, Parrino L, Sherieri A, Chervin R, Chokroverty S, Guilleminault C, et~al.
 \newblock Atlas, rules, and recording techniques for the scoring of cyclic alternating pattern (CAP) in human sleep.
 \newblock Sleep medicine. 2001;2(6):537-54.
+
+\bibitem{leeb2008bci}
+Leeb R, Brunner C, M{\"u}ller-Putz G, Schl{\"o}gl A, Pfurtscheller G.
+\newblock BCI Competition 2008--Graz data set B.
+\newblock Graz University of Technology, Austria. 2008:1-6.
 
 \end{thebibliography}
