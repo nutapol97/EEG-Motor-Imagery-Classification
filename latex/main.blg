@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d (TeX Live 2023)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: vancouver.bst
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=200001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: references.bib
+Warning--I didn't find a database entry for "hao2021comprehensive"
+Warning--I didn't find a database entry for "motamed2021data"
+You've used 21 entries,
+            3507 wiz_defined-function locations,
+            815 strings with 9968 characters,
+and the built_in function-call counts, 52287 in all, are:
+= -- 5979
+> -- 508
+< -- 299
++ -- 218
+- -- 107
+* -- 4093
+:= -- 5563
+add.period$ -- 84
+call.type$ -- 21
+change.case$ -- 12
+chr.to.int$ -- 660
+cite$ -- 21
+duplicate$ -- 4527
+empty$ -- 5027
+format.name$ -- 113
+if$ -- 12307
+int.to.chr$ -- 0
+int.to.str$ -- 21
+missing$ -- 242
+newline$ -- 108
+num.names$ -- 21
+pop$ -- 762
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 543
+stack$ -- 0
+substring$ -- 9754
+swap$ -- 671
+text.length$ -- 112
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 254
+width$ -- 23
+write$ -- 236
+(There were 2 warnings)
