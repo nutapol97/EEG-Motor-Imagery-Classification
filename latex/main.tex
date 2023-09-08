@@ -4,14 +4,12 @@
 %
 \documentclass[runningheads]{llncs}
 %
-
 \usepackage[T1]{fontenc}
 % T1 fonts will be used to generate the final print and online PDFs,
 % so please use T1 fonts in your manuscript whenever possible.
 % Other font encondings may result in incorrect characters.
 \usepackage{amsmath}
 \usepackage{graphicx}
-
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
 %
@@ -20,10 +18,8 @@
 \usepackage{color}
 %\renewcommand\UrlFont{\color{blue}\rmfamily}
 %
-
 \begin{document}
-
-
+%
 \title{Data Augmentation for EEG Motor Imagery Classification using Diffusion Model}
 %
 %\titlerunning{Abbreviated paper title}
@@ -90,10 +86,12 @@ The Fourier transform surrogates (\texttt{FTSurrogate}) method utilizes the phas
 
 \subsection{Frequency Shift}
 
-In the \texttt{Frequency Shift} method, the frequency spectrum of an EEG signal was randomly shifted to a different frequency range while maintaining the amplitude spectrum \cite{rommel2022data}. The proposed technique involved generating novel EEG signals that exhibit identical spectral characteristics as the initial signal, albeit with altered frequencies.  The \texttt{Frequency Shift} method was successful in enhancing the classification accuracy of certain EEG datasets. In the \texttt{Frequency Shift} method on motor imagery datasets, the implementation of the \texttt{Frequency Shift} method resulted in a 2.5\% increase in classification accuracy when compared to the baseline method. Moreover, this technique has been compared with various other transformation techniques to generate augmentated EEG signals \cite{rommel2021cadda}. The study assessed the efficacy of a novel method on various EEG classification tasks and demonstrated its superiority over conventional data augmentation techniques, including random cropping and flipping, as well as other learned data augmentation methods. The study's findings indicated that the suggested approach yields optimal performance and requires less time for training compared to gradient-based methods in the class-agnostic context. Additionally, it surpassed gradient-free methods in the class-wise context. The research paper lacked a specific numerical value for the quantity of effects or enhancements. The effectiveness of this method in enhancing classification performance was also observed in the BCI Competition IV 2a dataset \cite{brunner2008bci}.
+Rommel et al. \cite{rommel2021cadda} proposed.....
+
+In the \texttt{Frequency Shift} method, the frequency spectrum of an EEG signal was randomly shifted to a different frequency range while maintaining the amplitude spectrum \cite{rommel2022data}. The proposed technique involved generating novel EEG signals that exhibit identical spectral characteristics as the initial signal, albeit with altered frequencies.  The \texttt{Frequency Shift} method was successful in enhancing the classification accuracy of certain EEG datasets. In the \texttt{Frequency Shift} method on motor imagery datasets , the implementation of the \texttt{Frequency Shift} method resulted in a 2.5\% increased in classification accuracy when compared to the baseline method. Moreover, Jaderberg et al.(2021) \textcolor{red}{change to bib citation} proposed generating augmented EEG signals by applying various transformations, including the \texttt{Frequency Shift} method, to the original signals. The study assessed the efficacy of a novel method on various EEG classification tasks and demonstrated its superiority over conventional data augmentation techniques, including random cropping and flipping, as well as other learned data augmentation methods. The study's findings indicated that the suggested approach yields optimal performance and required less time for training compared to gradient-based methods in the class-agnostic context by 8.7\%. Additionally, it surpassed gradient-free methods in the class-wise context. The research paper lacked a specific numerical value for the quantity of effects or enhancements. The effectiveness of this method in enhancing classification performance was also observed in the BCI Competition IV 2a dataset \cite{brunner2008bci}.
 
 \subsection{SmoothTimeMask}
-\texttt{SmoothTimeMask} is a research methodology that utilizes time-domain augmentation to introduce smoothness into a signal. This is achieved by masking contiguous time intervals \cite{mohsenvand2020contrastive}.  This method involved generating a mask by randomly selecting a starting point and masking a fixed length of contiguous samples. A common technique used to create a smooth transition between masked and unmasked regions is the application of a convolution with a Gaussian kernel to the mask. The introduction of smoothness in the augmented signal has the potential to prevent overfitting and enhance the generalization of the model \cite{mohsenvand2020contrastive}  \textcolor{red}{need evidence of its effectiveness. The technique was used in other tasks of EEG. The result looks interesting so we include this technique in our work.}.
+\texttt{SmoothTimeMask} is a research methodology that utilized time-domain augmentation to introduce smoothness into a signal. This is achieved by masking contiguous time intervals \cite{mohsenvand2020contrastive}.  This method involved generating a mask by randomly selecting a starting point and masking a fixed length of contiguous samples. A common technique that used to create a smooth transition between masked and unmasked regions is the application of a convolution with a Gaussian kernel to the mask. The introduction of smoothness in the augmented signal has the potential to prevent overfitting and enhance the generalization of the model \cite{mohsenvand2020contrastive}. This technique achieved acculency is 85.77\% on emotion recognition task. 
 
 %EEG signal was performed with a filter in the band pass filter band of 8–35 Hz.
 
@@ -103,7 +101,7 @@ In the \texttt{Frequency Shift} method, the frequency spectrum of an EEG signal 
 
 To achieve this, \texttt{WaveGrad} uses an autoregressive architecture that predicts each sample of the waveform conditioned on the previous samples. Specifically, \texttt{WaveGrad} uses a modified version of the WaveNet architecture that replaces the dilated convolutions with a set of learned gates and skips connections, which reduces the computational cost of the model.
 
-\texttt{WaveGrad} trains the generative model using score matching, which is a technique that involves matching the gradient of the log-density function of the model to the gradient of the true log-density function of the data. The idea behind score matching is that the gradient of the log-density function is easier to estimate than the function itself and that matching the gradients is sufficient to match the distributions.
+\texttt{WaveGrad} trains the generative model using score matching, which is a technique that involves matching the gradient of the log-density function of the model to the gradient of the true log-density function of the data. The idea behind score matching is that the gradient of the log-density function is easier to estimate than the function itself, and that matching the gradients is sufficient to match the distributions.
 
 Score matching is a technique used for estimating the probability density function (\texttt{PDF}) of a dataset by matching the score function of a model to the true score function of the \texttt{PDF}. The score function is the gradient of the log-density function, i.e., the vector of partial derivatives of the log-density function with respect to each input variable.
 
@@ -132,7 +130,8 @@ where $\theta$ are the parameters of the model, $x_i$ is a data point, $\hat{p}(
 
 In addition, \texttt{WaveGrad} further improves the optimization of the model by using a variant of stochastic gradient descent called Stochastic Gradient Hamiltonian Monte Carlo (SGHMC). SGHMC uses Hamiltonian dynamics to simulate the motion of particles in a potential energy landscape, which improves the exploration of the parameter space during optimization.
 
-Overall, \texttt{WaveGrad} is able to generate high-quality waveforms that are comparable to or better than previous state-of-the-art methods. It achieves this by combining denoising and score matching with a modified version of the WaveNet architecture and SGHMC optimization. Although this technique shows its performance in the context of generating human voice audio \cite{chen2020wavegrad}, it should also work under an EEG signal because the sampling rate of the EEG signal is much lower than the audio domain.
+Overall, \texttt{WaveGrad} is able to generate high-quality waveforms that are comparable to or better than previous state-of-the-art methods. It achieves this by combining denoising and score matching with a modified version of the WaveNet architecture and SGHMC optimization. 
+
 
 \section{Methodology}
 We compared the diffusion method against four DA methods and the baseline method without augmentation. Figure \ref{fig:System Diagram} shows how the training sets were obtained using different combinations of the DA method and sampling size.  The sampling size was chosen at the ratio of 25, 50, 75, 100\%.  Five commonly-used models for MI classification was used. The models were trained using subject-dependent scheme and evaluated on their respective testing sets. 
@@ -167,8 +166,6 @@ Similar to previous works \cite{rommel2021cadda,mohsenvand2020contrastive,leeb20
 \end{sloppypar}
 %The process of \texttt{Noise Addition} 
 
-\textcolor{red}{add paper source for each technique}
-
 \subsubsection{Noise Addition}: \texttt{Noise Addition} entails the inclusion of diverse forms of noise, such as Gaussian, Poisson, and others, that possess varying parameters to the original EEG signal. The raw EEG signal was subjected to additive noise by incorporating a Gaussian distribution with a standard deviation of 0.1. 
 
 \subsubsection{Fourier Transform Surrogates}:
@@ -185,9 +182,9 @@ We random shift the frequency by \textpm2 Hz.
 It is first important that \texttt{WaveGrad} is originally a generative model, not a formal augmentation technique.  Thus, in contrary to other DA methods, \texttt{WaveGrad} has to be trained before it can be used to generate a synthetic EEG signal.   The dataset consists of 9 subjects and four MI classes. The EEG recording has 22 channels. Thus, the total number of \texttt{WaveGrad} models was (9 subjects x 22 channels x 4 classes) = 792 models.  The training procedure and parameters were the same across all \texttt{WaveGrad} models. The learning rate was set to 0.0001 and the diffusion steps to 1000.  \textcolor{red}{talk more about what you add/modify}
 
 \subsection{Evaluation}
-First, we quantify the similarity between the set of raw EEG signals and the set of augmented/synthesized EEG signals using Kullback-Leibler divergence(KL divergence). This helps to explain why the augmentation works. By performing augmentation, we increase the variation of the training set such that the new variation overlaps with the testing set. Hence, the similarity between these two sets is higher. On the other hand, the similarity between the two sets is not changed or decreased if the new augmented signal creates a random noise instead of a new variation.
+First, it is important to evaluate the quality of the augmented/synthetic data.  A common way is through dimensionality reduction KL divergence. The success of the diffusion method in comparison to other methods is demonstrated by the Kullback-Leibler (KL) divergence, which is used to measure the similarity between the training set (with and without augmentation) and the validation set. We expect that high-quality augmented or synthetic data should exhibit similarity between the training set (with and without augmentation) and the validation set.
 
-Second, once the quality of the augmented/synthetic data is quantified, we are now ready to quantify the usefulness of data augmentation techniques on actual EEG tasks.  We first selected five commonly-used motor imagery classification models (EEGNet, ATCNet, EEG-ITNet, Deep ConvNet and ShallowFBCSPNet) which would allow us to understand whether how complexity of the model relates with data augmentation.  Here, note that we simply define the complexity based on the model's number of parameters. Accuracy was then measured across all 21 combinations (5 DA methods x 4 sampling ratios + 1 baseline method without augmentation).  The details of each model were as follows:
+Second, once the quality of the augmented/synthetic data are quantified, we are now ready to quantify the usefulness of data augmentation techniques on actual EEG tasks.  We first selected five commonly-used motor imagery classification models (EEGNet, ATCNet, EEG-ITNet, Deep ConvNet and ShallowFBCSPNet) which would allow us to understand whether how complexity of the model relates with data augmentation.  Here, note that we simply define the complexity based on the model's number of parameters. Accuracy was then measured across all 21 combinations (5 DA methods x 4 sampling ratios + 1 baseline method without augmentation).  The details of each model were as follows:
 
 \subsubsection{EEGNet}
 %\textcolor{red}{intuition and parameters}
@@ -212,8 +209,8 @@ The shallow ConvNet are similar to the transformations of FBCSP. Concretely, the
 \subsection{Kullback-Leibler divergence(KL divergence).}
 
 To understand the quality of the generated data, we measured the similarity of signal by KL divergence process. We measure the KL divergence comparing of train set and test set, test set and train set with 25\% of data augmentation, test set and train set with 50\% of data augmentation, test set and train set with 75\% of data augmentation, test set and train set with 100\% of data augmentation, test set and data augmentation and train set and data augmentation. We randomize the augmentation data for this process 100 times and averaged the result.
+Overall, our method increases similarity as the ratios of augmented data are increased. When ratios are increased, the similarity for the SmoothTimeMask, Noise Addition, and FTSurrogate approaches that of the non-augmented data. On the other hand, as the augmented data from frequency shift increases, the similarity declines.
 
-Overall, \textcolor{red}{summarize the result a bit krub}
 
 \textcolor{red}{table caption is too small krub}
 
@@ -496,9 +493,9 @@ ShallowFBCSPNet & 50.93             & 56.62    & 15.85                        & 
 }
 \end{table}
 
-\subsection{Complexity of model}
+\subsection{Complexity of models}
 
-The low complexity model our method are improve acculency more than hight complexity model because the hight complexity model are ez to overfitting on trainset. ref table 9  however our method are not decreed the accuracy.   \textcolor{red}{this paragraph looks off?}
+In a low-complexity model, our method improves accuracy more than a high-complexity model because our method improves the similarity of the train set and the test set table \ref{table: The Average accuracy improvement from our method}. As a result, our method has an impact on low-complexity models. However, high-complexity models are at risk of overfitting on a training set. Hence, our method does not improve accuracy on high-complexity models. However, our method does not guarantee accuracy.
 
 
 \subsection{Limitation}

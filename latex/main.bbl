@@ -60,6 +60,16 @@ Akrout M, Gyepesi B, Holl{\'o} P, Po{\'o}r A, Kincs{\H{o}} B, Solis S, et~al.
 \newblock Diffusion-based Data Augmentation for Skin Disease Classification: Impact Across Original Medical Datasets to Fully Synthetic Images.
 \newblock arXiv preprint arXiv:230104802. 2023.
 
+\bibitem{hao2021comprehensive}
+Hao R, Namdar K, Liu L, Haider MA, Khalvati F.
+\newblock A comprehensive study of data augmentation strategies for prostate cancer detection in diffusion-weighted MRI using convolutional neural networks.
+\newblock Journal of Digital Imaging. 2021;34:862-76.
+
+\bibitem{motamed2021data}
+Motamed S, Rogalla P, Khalvati F.
+\newblock Data augmentation using Generative Adversarial Networks (GANs) for GAN-based detection of Pneumonia and COVID-19 in chest X-ray images.
+\newblock Informatics in Medicine Unlocked. 2021;27:100779.
+
 \bibitem{chen2020wavegrad}
 Chen N, Zhang Y, Zen H, Weiss RJ, Norouzi M, Chan W.
 \newblock Wavegrad: Estimating gradients for waveform generation.
