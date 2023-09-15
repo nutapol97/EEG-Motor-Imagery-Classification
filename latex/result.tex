@@ -1,0 +1,50 @@
+\section{Results}
+
+\subsection{Kullback-Leibler divergence(KL divergence)}
+To understand the quality of the generated data, we measured the similarity of the signal by the KL divergence process.
+We measure the KL divergence by comparing of train set and test set, test set and train set with 25\% of data augmentation, test set and train set with 50\% of data augmentation, test set and train set with 75\% of data augmentation, test set and train set with 100\% of data augmentation in Table~\ref{tab:KL1}, and test set and data augmentation and train set and data augmentation in Table~\ref{tab:KL2}.
+We randomized the augmentation data for this process 100 times and averaged the result.
+Overall, our method increases similarity as the ratios of augmented data are increased.
+When ratios are increased, the similarity for the SmoothTimeMask, Noise Addition, and FTSurrogate approaches that of the non-augmented data.
+On the other hand, as the augmented data from frequency shift increases, the similarity declines.
+
+
+\begin{table}[ht]
+    \caption[The result of KL divergence]{\label{tab:KL1}The result of the study of KL divergence of raw EEG dataset and data augmentation from \texttt{WaveGrad}}.
+    % \caption{\label{label}Table caption.}
+    \begin{indented}
+    \item[]\begin{tabular}{rccccc}
+    \hline
+    \multirow{2}{*}{Subject ID} & \multicolumn{5}{l}{test set vs train set with x\% of augmentation} \\ \cline{2-6} 
+                                & 0\%         & 25\%        & 50\%        & 75\%        & 100\%      \\ \hline
+    1                           & 2949.63     & 2757.15     & 2623.40     & 2525.57     & 2486.21    \\
+    2                           & 1641.60     & 1887.98     & 2009.06     & 2118.49     & 2222.43    \\
+    3                           & 2203.27     & 2298.26     & 2382.90     & 2416.10     & 2410.30    \\
+    4                           & 2559.50     & 2390.33     & 2291.63     & 2240.40     & 2176.35    \\
+    5                           & 2238.52     & 2215.49     & 2170.81     & 2146.55     & 2167.71    \\
+    6                           & 1935.63     & 1999.40     & 2061.10     & 2067.91     & 2103.15    \\
+    7                           & 2704.38     & 2564.74     & 2482.31     & 2424.12     & 2381.11    \\
+    8                           & 3245.50     & 2946.14     & 2752.42     & 2628.08     & 2497.71    \\
+    9                           & 2313.45     & 2290.44     & 2253.48     & 2231.11     & 2201.39   
+    \end{tabular}
+    \end{indented}
+\end{table}
+
+\begin{table}[]
+    \caption[The result of KL divergence]{\label{tab:KL2}The result of the study of KL divergence of raw EEG dataset and data augmentation from \texttt{WaveGrad}}.
+    \begin{indented}
+    \item[]\begin{tabular}{rcc}
+    \hline
+    Subject ID & \multicolumn{1}{c}{Train set vs Augmentation} & \multicolumn{1}{c}{Test set vs Augmentation} \\ \hline
+    1          & 1988.35                                        & 1582.51                                       \\
+    2          & 2749.47                                        & 2970.01                                       \\
+    3          & 2671.86                                        & 2800.51                                       \\
+    4          & 1775.89                                        & 2193.34                                       \\
+    5          & 2045.00                                        & 1870.57                                       \\
+    6          & 2247.53                                        & 2069.20                                       \\
+    7          & 2024.06                                        & 1808.16                                       \\
+    8          & 1779.83                                        & 1398.65                                       \\
+    9          & 2145.52                                        & 2123.10                                      
+    \end{tabular}
+    \end{indented}
+\end{table}

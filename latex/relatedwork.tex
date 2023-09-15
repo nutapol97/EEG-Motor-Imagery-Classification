@@ -1,0 +1,63 @@
+\section{Related Work}
+
+We reviewed commonly-used data augmentation for EEG MI such as \texttt{Noise Addition}, \texttt{Fourier Transform Surrogates}, \texttt{Frequency Shift} and \texttt{SmoothTimeMask}.
+
+\subsection{Noise Addition}
+\texttt{Noise Addition} has two main categories for adding noise to the EEG signals for DA \cite{lashgari2020data}.
+The first category regards adding various types of noise, such as Gaussian noise, Poisson noise, salt-and-pepper noise, etc., each of which has its own set of parameters (such as mean and standard deviation), to the original signal.
+The second category converts EEG signals to image sequences and then adds noise to the resulting image sequences. 
+In any case, the introduction of noise to the training data is assumed to enhance the robustness of the model by compelling it to learn features that were less susceptible to minor fluctuations in the data.
+Indeed, such simulation of EEG data variability was commonly utilized to replicate the effects of electrode noise or subject movement during experimental procedures.
+Previous research has demonstrated that the inclusion of Gaussian noise in EEG signals enhances the efficacy of the MI classification model when applied to BCI competition IV dataset 2b \cite{brunner2008bci}, resulting in a 10\% improvement in performance.
+
+\subsection{Fourier transform surrogates}
+The Fourier transform surrogates (\texttt{FTSurrogate}) method utilizes the phase data of frequency elements, which were subsequently rearranged randomly while maintaining their original magnitude spectrum \cite{schwabedal2018addressing}.
+The generation of synthetic data samples has been utilized as a means to address the underrepresentation of certain classes.
+This approach has been shown to improve the balance of class distribution and enhance the accuracy of classification.
+The method proposed in this study has the potential to enhance classification performance either as a standalone technique or in conjunction with other data augmentation methods \cite{schwabedal2018addressing}.
+The extent of enhancement varies based on the particular dataset and classification issue.
+The mean F1-score of a convolutional neural network was improved by 7\% in a sleep stage classification with the implementation of surrogate-based augmentation on the CAPSLPDB sleep database \cite{terzano2001atlas}.
+
+\subsection{Frequency Shift}
+In the \texttt{Frequency Shift} method, the frequency spectrum of an EEG signal was randomly shifted to a different frequency range while maintaining the amplitude spectrum \cite{rommel2022data}.
+The proposed technique involved generating novel EEG signals that exhibit identical spectral characteristics as the initial signal, albeit with altered frequencies. 
+The \texttt{Frequency Shift} method was successful in enhancing the classification accuracy of certain EEG datasets. 
+In the \texttt{Frequency Shift} method on motor imagery datasets, the implementation of the \texttt{Frequency Shift} method resulted in a 2.5\% increase in classification accuracy when compared to the baseline method. 
+Moreover, this technique has been compared with various other transformation techniques to generate augmented EEG signals \cite{rommel2021cadda}.
+The study assessed the efficacy of a novel method on various EEG classification tasks and demonstrated its superiority over conventional data augmentation techniques, including random cropping and flipping, as well as other learned data augmentation methods. 
+These findings indicated that the suggested approach yields optimal performance and requires less time for training compared to gradient-based methods in the class-agnostic context.
+Additionally, it surpassed gradient-free methods in the class-wise context.
+The research paper lacked a specific numerical value for the quantity of effects or enhancements. 
+The effectiveness of this method in enhancing classification performance was also observed in the BCI Competition IV 2a dataset \cite{brunner2008bci}.
+ 
+\subsection{SmoothTimeMask}
+\texttt{SmoothTimeMask} is a research methodology that utilizes time-domain augmentation to introduce smoothness into a signal. 
+This is achieved by masking contiguous time intervals \cite{mohsenvand2020contrastive}.
+This method involved generating a mask by randomly selecting a starting point and masking a fixed length of contiguous samples.
+A common technique used to create a smooth transition between masked and unmasked regions is the application of a convolution with a Gaussian kernel to the mask.
+The introduction of smoothness in the augmented signal has the potential to prevent overfitting and enhance the generalization of the model \cite{mohsenvand2020contrastive}.
+This technique achieved an accuracy is 85.77\% on the emotion recognition task. 
+
+\subsection{WaveGrad}
+\texttt{WaveGrad} \cite{chen2020wavegrad} is a generative model for waveform generation that uses score matching \cite{song2020sliced, song2020improved} and denoising \cite{sohl2015deep, ho2020denoising} to improve the quality of generated waveforms. 
+The basic idea behind the method is to estimate the probability density function (PDF) of a dataset using a generative model, and then use this estimate to generate new data points that are similar to the original data. To achieve this, \texttt{WaveGrad} uses an autoregressive architecture that predicts each sample of the waveform conditioned on the previous samples.
+Specifically, \texttt{WaveGrad} uses a modified version of the WaveNet architecture that replaces the dilated convolutions with a set of learned gates and skip connections, which reduces the computational cost of the model.
+
+As stated earlier, \texttt{WaveGrad} model is trained using score matching for comparing the log-density function of both generated data and real data.
+With score matching, the gradient of the log-density (score) function is easier to estimate than the function itself and matching the gradients is sufficient to match the distributions.
+In other words, we can estimate the PDF of a dataset by matching the score function of a model to the true score function of the PDF of the target dataset.
+Thus, the objective of \texttt{WaveGrad} is to minimize the difference between the score function of both generated data and the target dataset.
+
+In the implementation of \texttt{WaveGrad}, the idea of score matching is extended to a weighted denoising score matching.
+The denoising autoencoder is trained to remove noise from the input data, and the score function of the denoised data is used to estimate the true score function of the PDF.
+Then, we weigh the cleaner samples (less noise) with a higher value while the noisier samples get a lower weight. Then our loss function is:
+\begin{equation}
+    L(\theta) = \sum_i w(x_i) |\nabla_x \log \hat{p}(\tilde{x}_i) - \nabla_x \log \hat{p}(x_i)|^2
+\end{equation} where $\theta$ are the parameters of the model, $x_i$ is a data point, $\hat{p}(x_i)$ is the true probability density function of the dataset, $\tilde{x}_i$ is the denoised version of $x_i$, and $w(x_i)$ is a weighting function that assigns a weight to each sample based on the level of noise in its label.
+
+In addition, \texttt{WaveGrad} further improves the optimization of the model by using a variant of stochastic gradient descent called Stochastic Gradient Hamiltonian Monte Carlo (SGHMC). 
+SGHMC uses Hamiltonian dynamics to simulate the motion of particles in a potential energy landscape, which improves the exploration of the parameter space during optimization.
+
+Overall, \texttt{WaveGrad} is able to generate high-quality waveforms that are comparable to or better than previous state-of-the-art methods. 
+It achieves this by combining denoising and score matching with a modified version of the WaveNet architecture and SGHMC optimization. 
+

@@ -2,13 +2,13 @@
 % LLNCS macro package for Springer Computer Science proceedings;
 % Version 2.21 of 2022/01/12
 %
-\documentclass[runningheads]{llncs}
+\documentclass[12pt]{iopart}
 %
-\usepackage[T1]{fontenc}
+% \usepackage[T1]{fontenc}
 % T1 fonts will be used to generate the final print and online PDFs,
 % so please use T1 fonts in your manuscript whenever possible.
 % Other font encondings may result in incorrect characters.
-\usepackage{amsmath}
+% \usepackage{amsmath}
 \usepackage{graphicx}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
@@ -26,27 +26,26 @@
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{Nutapol Soingern \and
-Akraradet Sinsamersuk\and
-Chaklam Silpasuwanchai  }
+\author{Nutapol Soingern$^1$,Akraradet Sinsamersuk$^2$,Chaklam Silpasuwanchai$^3$}
 %
-\authorrunning{Nutapol S.\and et al.}
+% \authorrunning{Nutapol S.\and et al.}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
-\institute{Asian Institute of Technology, School of Engineering and Technology, Data Science and Artificial Intelligence, Pathum Thani, Thailand \email{chaklam@ait.asia} 
-}
+\address{}
+
+% \institute{Asian Institute of Technology, School of Engineering and Technology, Data Science and Artificial Intelligence, Pathum Thani, Thailand \email{chaklam@ait.asia} 
+% }
 %
-\maketitle              % typeset the header of the contribution
+% \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-\begin{sloppypar}
-  Motor imagery classification using electroencephalogram (EEG) signals is an important research topic that has been extensively studied in the field of brain-computer interfaces (BCIs). However, due to the limited amount of available data, possibility of overfitting is a challenge, especially when using a deep-learning classifier. One way to address this is by performing data augmentation. This paper investigates the efficacy of the diffusion model as a data augmentation method for motor imagery classification. We evaluated the diffusion method by comparing it with commonly-used EEG data augmentation techniques namely such as Noise Addition,
+  Motor imagery classification using electroencephalogram (EEG) signals is an important research topic that has been extensively studied in the field of brain-computer interfaces (BCIs). However, due to the limited amount of available data, the possibility of overfitting is a challenge, especially when using a deep-learning classifier. One way to address this is by performing data augmentation. This paper investigates the efficacy of the diffusion model as a data augmentation method for motor imagery classification. We evaluated the diffusion method by comparing it with commonly-used EEG data augmentation techniques namely such as Noise Addition,
   Fourier Transform Surrogates, Frequency Shift, and SmoothTimeMask. The result shows that the diffusion method outperformed other methods in terms of classification accuracy by 17.49\%. The Kullback–Leibler (KL) divergence is used for assessing the similarity between the training set (with and without augmentation) and validation set, thus showing the effectiveness of the diffusion approach compared to other techniques.
-\end{sloppypar}
+% \end{sloppypar}
 
-\keywords{Motor Imagery  \and EEG \and Brain Computer Interface \and Deep Learning \and Data Augmentation \and Diffusion \and KL divergence.}
 \end{abstract}
+% \keywords{Motor Imagery, EEG, Brain Computer Interface, Deep Learning, Data Augmentation, Diffusion, KL divergence.}
 %
 %
 %
@@ -86,10 +85,8 @@ The Fourier transform surrogates (\texttt{FTSurrogate}) method utilizes the phas
 
 \subsection{Frequency Shift}
 
-Rommel et al. \cite{rommel2021cadda} proposed.....
-
-In the \texttt{Frequency Shift} method, the frequency spectrum of an EEG signal was randomly shifted to a different frequency range while maintaining the amplitude spectrum \cite{rommel2022data}. The proposed technique involved generating novel EEG signals that exhibit identical spectral characteristics as the initial signal, albeit with altered frequencies.  The \texttt{Frequency Shift} method was successful in enhancing the classification accuracy of certain EEG datasets. In the \texttt{Frequency Shift} method on motor imagery datasets , the implementation of the \texttt{Frequency Shift} method resulted in a 2.5\% increased in classification accuracy when compared to the baseline method. Moreover, Jaderberg et al.(2021) \textcolor{red}{change to bib citation} proposed generating augmented EEG signals by applying various transformations, including the \texttt{Frequency Shift} method, to the original signals. The study assessed the efficacy of a novel method on various EEG classification tasks and demonstrated its superiority over conventional data augmentation techniques, including random cropping and flipping, as well as other learned data augmentation methods. The study's findings indicated that the suggested approach yields optimal performance and required less time for training compared to gradient-based methods in the class-agnostic context by 8.7\%. Additionally, it surpassed gradient-free methods in the class-wise context. The research paper lacked a specific numerical value for the quantity of effects or enhancements. The effectiveness of this method in enhancing classification performance was also observed in the BCI Competition IV 2a dataset \cite{brunner2008bci}.
-
+In the \texttt{Frequency Shift} method, the frequency spectrum of an EEG signal was randomly shifted to a different frequency range while maintaining the amplitude spectrum \cite{rommel2022data}. The proposed technique involved generating novel EEG signals that exhibit identical spectral characteristics as the initial signal, albeit with altered frequencies. The \texttt{Frequency Shift} method was successful in enhancing the classification accuracy of certain EEG datasets. In the \texttt{Frequency Shift} method on motor imagery datasets, the implementation of the \texttt{Frequency Shift} method resulted in a 2.5\% increase in classification accuracy when compared to the baseline method. Moreover, this technique has been compared with various other transformation techniques to generate augmentated EEG signals \cite{rommel2021cadda}. The study assessed the efficacy of a novel method on various EEG classification tasks and demonstrated its superiority over conventional data augmentation techniques, including random cropping and flipping, as well as other learned data augmentation methods. The study's findings indicated that the suggested approach yields optimal performance and requires less time for training compared to gradient-based methods in the class-agnostic context. Additionally, it surpassed gradient-free methods in the class-wise context. The research paper lacked a specific numerical value for the quantity of effects or enhancements. The effectiveness of this method in enhancing classification performance was also observed in the BCI Competition IV 2a dataset \cite{brunner2008bci}.
+ 
 \subsection{SmoothTimeMask}
 \texttt{SmoothTimeMask} is a research methodology that utilized time-domain augmentation to introduce smoothness into a signal. This is achieved by masking contiguous time intervals \cite{mohsenvand2020contrastive}.  This method involved generating a mask by randomly selecting a starting point and masking a fixed length of contiguous samples. A common technique that used to create a smooth transition between masked and unmasked regions is the application of a convolution with a Gaussian kernel to the mask. The introduction of smoothness in the augmented signal has the potential to prevent overfitting and enhance the generalization of the model \cite{mohsenvand2020contrastive}. This technique achieved acculency is 85.77\% on emotion recognition task. 
 
@@ -213,6 +210,21 @@ Overall, our method increases similarity as the ratios of augmented data are inc
 
 
 \textcolor{red}{table caption is too small krub}
+
+\begin{table}
+  \caption{\label{label}Table caption.}
+  \begin{indented}
+  \item[]\begin{tabular}{@{}llll}
+  \br
+  Head 1&Head 2&Head 3&Head 4\\
+  \mr
+  1.1&1.2&1.3&1.4\\
+  2.1&2.2&2.3&2.4\\
+  \br
+  \end{tabular}
+  \end{indented}
+  \end{table}
+
 
 \begin{table}[ht]
   \centering

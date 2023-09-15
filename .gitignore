@@ -1,6 +1,9 @@
 .vscode-server
-latex/main.synctex.gz
-latex/main.aux
-latex/main.fdb_latexmk
-latex/main.fls
-latex/main.log
+*.synctex.gz
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.bbl
+*.blg
+*.dvi
