@@ -1,0 +1,113 @@
+\section{Discussion}
+In this study, we demonstrated the implementation of the \texttt{WaveGrad}-based Diffusion Model as a DA for EEG MI datasets.
+From the result, our method outperformed the other four traditional DA methods in the classification task.
+Thus, for the discussion section, we focused mainly on our method.
+
+\subsection{Key improvement}
+The proposed methodology increased the variety of the train set, leading to an enhancement in the quality of the train set.
+As shown in Figure~\ref{fig:KL-average}, the diffusion-based method created a new sample that is not a duplication of an existing one but shares the same characteristics.
+Thus, the similarity between the train set with augmentation and the test set was increased. 
+However, when performing augmentation with \texttt{Noise Addition}, \texttt{FTSurrogate}, and \texttt{SmoothTimeMask}, the similarity of the train set compared to the test set remains unchanged regardless of the augmentation.
+This indicates that the augmented data does not share the characteristics of the dataset and it is obvious in the case of \texttt{SmoothTimeMask} and \texttt{Noise Addition}.
+The same explanation could not be used with the case of the \texttt{Frequency shift} method.
+While the similarity score was high when the augmentation was used, the classification performance was not improved at all. 
+We believe the KL divergence might not be able to show the wrongness of this method.
+Overall, our diffusion-based method improves the similarity of the test set and the train set (Figure~\ref{fig:KL-average}) and improves the classification performance (Table~\ref{table:AverageAccuracy}).
+
+\begin{table}[ht]
+    % \centering
+    \caption{The Average accuracy improvement from our method on subject level.}
+    \label{tab:AccuracySubject}
+    \begin{indented}
+    \item[]\begin{tabular}{ccc}
+        \br
+        Subject & Baseline Accuracy & \begin{math} \Delta \end{math} of \texttt{WaveGrad} \\
+        \mr
+        1        & 43.06             & 17.01             \\
+        2        & 29.24             & 6.46              \\
+        \textbf{3}        & \textbf{56.95}            & \textbf{15.36}             \\
+        4        & 37.08             & 7.77              \\
+        \textbf{5}        & \textbf{27.08}             & \textbf{4.13}              \\
+        6        & 29.58             & 4.01              \\
+        7        & 40.07             & 11.77             \\
+        8        & 53.19             & 8.18              \\
+        \textbf{9}        & \textbf{65.76}             & \textbf{2.59}              \\
+        \br
+        \end{tabular}
+    \end{indented}
+\end{table}
+
+\subsection{Subjects level}
+We observed that the effectiveness of data augmentation was based on the quality of the dataset.
+Table~\ref{tab:AccuracySubject} shows that subject 3 has a baseline accuracy of 56.95\% then improved by 15.46\% after the augmentation.
+In contrast, subject 5's baseline accuracy was measured to be 28.08\% in the study and the improvement after the augmentation was small with 4.13\%. 
+In addition, the improvement gained with the augmentation in subject 9's case is small even though the baseline accuracy is the highest out of all subjects.
+This could be due to the limitation of the classification model. 
+
+
+\begin{table}[ht]
+    % \centering
+    \caption{The Average accuracy improvement from our method on DA size level.}
+    \label{table: The Average accuracy improvement from our method on DA size level}
+    \begin{indented}
+    \item[]\begin{tabular}{ccccc}
+        \br
+        Baseline Accuracy & DA size & \texttt{WaveGrad} & \begin{math} \sigma \end{math} & \begin{math} \Delta \end{math} \\
+        \mr
+        42.45             & 25\%    & 51.15    & 17.61                        & 8.71              \\
+                          & 50\%    & 50.56    & 17.38                        & 8.11              \\
+                          & 75\%    & 51.64    & 17.24                        & 9.19              \\
+                          & 100\%   & 50.78    & 17.72                        & 8.33              \\
+        \br
+        \end{tabular}
+    \end{indented}
+\end{table}
+        
+\subsection{Size of DA}
+The effect of the size of DA on the classification performance was not a direct variation.
+Table~\ref{table: The Average accuracy improvement from our method on DA size level} presented the average accuracy improvement achieved by our method on the DA size level.
+The limitations of the dataset used to train the \texttt{WaveGrad} method have impacted its capacity to produce signals with greater valence.
+The observed limitation might account for the non-linear relationship between the size of the data augmentation and the corresponding increase in accuracy. 
+The result suggested that increasing the number of samples may not necessarily lead to a significant enhancement in accuracy, particularly if the additional samples fail to encompass the complete spectrum of potential signal fluctuations.
+
+However, despite this limitation, the \texttt{WaveGrad} method still outperformed the baseline accuracy on all levels of data augmentation, with the highest improvement achieved at a DA size of 75\%. 
+This finding suggested that even with a limited dataset, data augmentation techniques such as \texttt{WaveGrad} can still be effective in improving the accuracy of motor imagery classification.
+
+It was worth noting that the results presented in the table were based on a single dataset, and the effectiveness of the \texttt{WaveGrad} method varies with other datasets or signal processing tasks. 
+Future studies should investigate the generalizability of the \texttt{WaveGrad} method and explore its potential for improving accuracy in other EEG-based classification tasks.
+
+The study concluded that although the \texttt{WaveGrad} method's capacity to produce signals with higher valence is affected by the restricted dataset used for its training, the outcomes presented in the table indicated that the method can enhance the precision of the motor imagery classification task using EEG signals. 
+Additional investigation was required to establish the applicability of the \texttt{WaveGrad} approach to alternative datasets and signal processing assignments.
+
+
+\begin{table}[ht]
+    % \centering
+    \caption{The Average accuracy improvement from our method.}
+    \label{table: The Average accuracy improvement from our method}
+    \begin{indented}
+    \item[]\begin{tabular}{ccccc}
+        \br
+        Model           & Baseline Accuracy & \texttt{WaveGrad} & \begin{math} \sigma \end{math} & \begin{math} \Delta \end{math} \\
+        \mr
+        ATCNet          & 47.68             & 53.63    & 18.45                        & 5.94  \\
+        Deep ConvNet    & 32.60             & 52.93    & 18.49                        & 20.33 \\
+        EEGITNet        & 46.84             & 54.96    & 16.76                        & 8.12  \\
+        EEGNet          & 34.18             & 37.04    & 8.00                         & 2.85  \\
+        ShallowFBCSPNet & 50.93             & 56.62    & 15.85                        & 5.69 \\
+        \br
+        \end{tabular}
+    \end{indented}
+\end{table}
+
+\subsection{Complexity of models}
+In a low-complexity model, our method improves accuracy more than the model with high-complexity as shown Table~\ref{table: The Average accuracy improvement from our method}.
+We suspected that the model with high complexity might be overfitting to the train set.
+As a result, to assess the effect of diffusion-based data augmentation of the high-complexity model, we might need to change the dataset or task that suited the complexity.
+
+\subsection{Limitation}
+First, the proposed data augmentation method was developed based on a limited dataset, specifically the BCI competition IV dataset 2a. 
+While the method showed promising results on this dataset, its effectiveness might be limited by the size and quality of the dataset used for its development. 
+Future work could involve evaluating the generalizability of the method on other EEG MI datasets to improve its confidence in wider usage scenarios.
+Second, the proposed data augmentation method was developed specifically for the EEG MI task. 
+It might not necessarily generalize well to other EEG-based tasks. 
+Future work could involve evaluating the method on other EEG signal tasks, such as P300 and SSEVP, to assess its robustness and adaptability across different EEG-based applications.
