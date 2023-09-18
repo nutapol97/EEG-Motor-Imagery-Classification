@@ -1,0 +1,28 @@
+\section{Introduction}
+
+Brain-computer interfaces (BCI) establish a direct pathway between the human brain and a computer via signal processing and decoding techniques. 
+One classic paradigm of EEG is motor imagery (MI), in which its physiological basis is based on body movements or imagined movements that can produce $\alpha$ (8-13 Hz) and $\beta$ (13-30 Hz) event-related synchronization (ERS) and event-related desynchronization (ERD) rhythms in the motor-sensory areas of the brain \cite{wolpaw2013brain}. 
+Recently, the deep learning (DL) model has been used for motor imagery classification. 
+For example, EEGNet \cite{lawhern2018eegnet} is a compact convolutional neural network designed for EEG-based brain-computer interfaces that effectively extracts spatial-temporal features from EEG signals.
+In any case, the paucity of data is a prevalent issue in the field of EEG classification, as it hinders the development and performance of DL models.
+Consequently, a common symptom is overfitting, which reduces the model's accuracy and robustness on test set \cite{bilbao2017overfitting}. 
+
+Data augmentation (DA) has been widely used to improve the robustness and accuracy of DL by artificially increasing the number of training data.
+Traditional EEG data augmentation methods include \texttt{Noise Addition} \cite{wang2018data,parvan2019transfer,li2019channel}, fourier transform surrogates \cite{schwabedal2018addressing}, \texttt{Frequency Shift}ing \cite{rommel2021cadda,rommel2022data} and \texttt{\texttt{SmoothTimeMask}} \cite{mohsenvand2020contrastive}.
+\texttt{Noise Addition} \cite{li2019channel,parvan2019transfer} adds random white noise to all channels.
+Fourier transform surrogates \cite{schwabedal2018addressing} randomizes the Fourier-transform (FT) phases of temporal-spatial data and generates surrogates that approximate examples from the data-generating distribution. \texttt{Frequency Shift}ing \cite{rommel2021cadda,rommel2022data} randomly shifts the frequency spectrum on all channels.
+Last, \texttt{\texttt{SmoothTimeMask}} \cite{mohsenvand2020contrastive} randomly masks consecutive time steps of the EEG signal and replaces them with zeros, in which the motivation is to force the model to disregard minor irrelevant events.
+
+Recently, diffusion model \cite{ho2020denoising} was proposed which generates synthetic data based on Langevin dynamics.
+These models naturally admitted a progressive lossy decompression scheme.
+Diffusion mode has been used as a DA method to generate synthetic training data for skin disease classification \cite{akrout2023diffusion}, prostate cancer detection \cite{hao2021comprehensive}, chest X-ray imaging \cite{motamed2021data}, etc.
+
+In this work, we demonstrated the use of the diffusion model for data augmentation.
+Particularly, we developed our diffusion model based on \texttt{WaveGrad} \cite{chen2020wavegrad} as a DA method for motor imagery classification.
+\texttt{WaveGrad} has been initially for audio waveform generation.
+The proposed approach involves utilizing score matching \cite{song2020sliced,song2020improved} and diffusion probabilistic \cite{sohl2015deep,ho2020denoising} models to estimate gradients of the data density within a conditional model. 
+Because \texttt{WaveGrad} is shown to be successful in waveform generation, we apply the technique in the EEG signal with sequence length adjusted.
+The process involves initializing the model with a Gaussian white noise signal and subsequently improving the signal quality through an iterative process that utilizes a gradient-based sampler that is conditioned on the mel-spectrogram.
+We evaluated the effect of the proposed method by performing DA on BCI Competition IV 2a \cite{brunner2008bci} with various sizes of synthetic data with five standards EEG MI models (EEGNet \cite{lawhern2018eegnet}, ATCNet \cite{altaheri2022physics}, EEG-ITNet \cite{salami2022eeg}, Deep ConvNet \cite{schirrmeister2017deep} and ShallowFBCSPNet \cite{schirrmeister2017deep}). 
+The proposed method improves the performance of classification models and outperforms other traditional EEG data augmentation methods. 
+
