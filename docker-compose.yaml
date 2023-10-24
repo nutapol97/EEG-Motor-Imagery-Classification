@@ -7,7 +7,7 @@ services:
       dockerfile: python.Dockerfile
     volumes:
       - ./projects:/root/projects
-      - ./.vscode-server/python:/root/.vscode-server
+      - vscode-python:/root/.vscode-server
   latex:
     image: akraradets/dataug-eegmi-latex:latest
     build: 
@@ -15,4 +15,8 @@ services:
       dockerfile: latex.Dockerfile
     volumes:
       - ./latex:/root/latex
-      - ./.vscode-server/latex:/root/.vscode-server
+      - vscode-latex:/root/.vscode-server
+
+volumes:
+  vscode-latex:
+  vscode-python:
