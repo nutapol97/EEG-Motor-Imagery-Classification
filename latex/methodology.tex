@@ -7,11 +7,10 @@ The models were trained using a subject-dependent scheme and evaluated on their 
 
 \begin{figure}[ht]
   \centering
-  \caption[System Diagram]{\label{fig:SystemDiagram} Showed how to obtain training sets when using traditional DA and \texttt{WaveGrad}. \texttt{WaveGrad} was trained for each EEG channel in each class for each subject. Thus, we trained a total of 792 models from four classes, 22 channels and 9 subjects.}
+  \caption[System Diagram]{\label{fig:SystemDiagram} Showed how to obtain training sets when using traditional DA and \texttt{WaveGrad}. \texttt{WaveGrad} was trained for each EEG channel in each class for each subject. Thus, we trained a total of 792 models from four classes, 22 channels, and 9 subjects.}
   \includegraphics[width=0.6\textwidth]{fig/dyagram.pdf}
   \label{fig:System}
 \end{figure}
-
 
 \subsection{Datasets}
 BCI Competition IV 2a \cite{brunner2008bci} was a collection of EEG data from 9 subjects who participated in a cue-based BCI paradigm involving four distinct motor imagery tasks: imagining movement of the left hand (class 1), the right hand (class 2), both feet (class 3) and the tongue (class 4).
@@ -55,7 +54,7 @@ The raw EEG signal was subjected to additive noise by incorporating a Gaussian d
 
 
 \subsubsection{Frequency Shift:} The technique of \texttt{Frequency Shift} is characterized by the alteration of the frequency of the EEG signal by a specific amount.
-We random shift the frequency by \textpm2 Hz.
+We randomized the shift of the frequency by \textpm2 Hz.
 
 \subsubsection{SmoothTimeMask:}
 \texttt{SmoothTimeMask} involves applying a smooth window function to mask a continuous segment of the signal and optimizing it using gradient-based methods.
@@ -69,7 +68,7 @@ The EEG recording has 22 channels.
 Thus, the total number of \texttt{WaveGrad} models was (9 subjects x 22 channels x 4 classes) = 792 models.
 The training procedure and parameters were the same across all \texttt{WaveGrad} models.
 The learning rate was set to 0.0001 and the diffusion steps to 1000.
-\textcolor{red}{talk more about what you add/modify}
+% \textcolor{red}{talk more about what you add/modify}
 
 \subsection{Evaluation}
 First, it is important to evaluate the quality of the augmented/synthetic data.
@@ -78,7 +77,7 @@ The success of the diffusion method in comparison to other methods is demonstrat
 We expect that high-quality augmented or synthetic data should exhibit similarity between the training set (with and without augmentation) and the validation set.
 
 Second, once the quality of the augmented/synthetic data is quantified, we are now ready to quantify the usefulness of data augmentation techniques on actual EEG tasks.
-We first selected five commonly used motor imagery classification models (EEGNet, ATCNet, EEG-ITNet, Deep ConvNet and ShallowFBCSPNet) which would allow us to understand how the complexity of the model relates to data augmentation.
+We first selected five commonly used motor imagery classification models (EEGNet, ATCNet, EEG-ITNet, Deep ConvNet, and ShallowFBCSPNet) which would allow us to understand how the complexity of the model relates to data augmentation.
 Here, note that we simply define the complexity based on the model's number of parameters.
 Accuracy was then measured across all 21 combinations (5 DA methods x 4 sampling ratios + 1 baseline method without augmentation).
 The details of each model were as follows:
